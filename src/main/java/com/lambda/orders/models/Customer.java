@@ -1,5 +1,7 @@
 package com.lambda.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,12 +23,17 @@ public class Customer
     private double outstandingamt;
     private String phone;
 
-    private long agentcode;
+    @ManyToOne
+    @JoinColumn(name = "agentcode", nullable = false)
+    @JsonIgnoreProperties(value = "customer", allowSetters = true)
+    private Agent agent;
+
+
 
     public Customer()
     {
     }
-    public Customer(String custname, String custcity, String workingarea, String custcountry, String grade, double openingamt, double receiveamt, double paymentamt, double outstandingamt, String phone, long agentcode)
+    public Customer(String custname, String custcity, String workingarea, String custcountry, String grade, double openingamt, double receiveamt, double paymentamt, double outstandingamt, String phone, Agent agent)
     {
         this.custname = custname;
         this.custcity = custcity;
@@ -38,7 +45,7 @@ public class Customer
         this.paymentamt = paymentamt;
         this.outstandingamt = outstandingamt;
         this.phone = phone;
-        this.agentcode = agentcode;
+        this.agent = agent;
     }
     public long getCustcode()
     {
@@ -150,13 +157,13 @@ public class Customer
         this.phone = phone;
     }
 
-    public long getAgentcode()
+    public Agent getAgent()
     {
-        return agentcode;
+        return agent;
     }
 
-    public void setAgentcode(long agentcode)
+    public void setAgent(Agent agent)
     {
-        this.agentcode = agentcode;
+        this.agent = agent;
     }
 }
