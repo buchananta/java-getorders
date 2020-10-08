@@ -1,5 +1,7 @@
 package com.lambda.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +12,8 @@ public class Order
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int ordnum;
+    private long ordnum;
+
     private double ordamount;
 
     private double advanceamount;
@@ -21,27 +24,30 @@ public class Order
         inverseJoinColumns = @JoinColumn(name = "paymentid"))
     private Set<Payment> payments = new HashSet<>();
 
-    private long custcode;
+    @ManyToOne
+    @JoinColumn(name="custcode", nullable = false)
+    @JsonIgnoreProperties(value = "order", allowSetters = true)
+    private Customer customers;
 
     private String orderdescription;
 
     public Order()
     {
     }
-    public Order(double ordamount, double advanceamount, long custcode, String orderdescription)
+    public Order(double ordamount, double advanceamount, Customer customer, String orderdescription)
     {
         this.ordamount = ordamount;
         this.advanceamount = advanceamount;
-        this.custcode = custcode;
+        this.customers = customer;
         this.orderdescription = orderdescription;
     }
 
-    public int getOrdnum()
+    public long getOrdnum()
     {
         return ordnum;
     }
 
-    public void setOrdnum(int ordnum)
+    public void setOrdnum(long ordnum)
     {
         this.ordnum = ordnum;
     }
@@ -66,14 +72,14 @@ public class Order
         this.advanceamount = advanceamount;
     }
 
-    public long getCustcode()
+    public Customer getCustomers()
     {
-        return custcode;
+        return customers;
     }
 
-    public void setCustcode(long custcode)
+    public void setCustomers(Customer customers)
     {
-        this.custcode = custcode;
+        this.customers = customers;
     }
 
     public String getOrderdescription()
